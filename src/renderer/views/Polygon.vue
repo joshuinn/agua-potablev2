@@ -5,6 +5,26 @@
       <div class="p-4">
         <h2 class="text-xl mb-4">Área de Polígonos Irregulares</h2>
 
+        <!-- Selector de unidades de medida -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2"
+            >Unidad de Medida:</label
+          >
+          <div class="flex gap-2 items-center">
+            <select v-model="selectedUnit" class="border p-2 rounded">
+              <option v-for="unit in units" :key="unit" :value="unit">
+                {{ unit }}
+              </option>
+            </select>
+            <button
+              @click="showAddUnitModal = true"
+              class="bg-green-500 text-white px-3 py-2 rounded text-sm"
+            >
+              + Agregar Unidad
+            </button>
+          </div>
+        </div>
+
         <!-- Formulario para agregar coordenadas -->
         <div class="mb-4 flex gap-2">
           <input
@@ -50,9 +70,15 @@
               <td class="border p-2">{{ coord.distance.toFixed(2) }}</td>
               <td class="border p-2">
                 <button
-                  @click="removeCoordinate(index)"
-                  class="bg-red-500 text-white px-2 py-1 rounded"
+                  @click="confirmDelete(index)"
+                  class="bg-red-500 text-white px-2 py-1 rounded flex items-center gap-2"
+                  :disabled="isDeleting"
                 >
+                  <span
+                    v-if="isDeleting && deletingIndex === index"
+                    class="inline-block animate-spin h-4 w-4 border-2 border-white rounded-full border-t-transparent"
+                  >
+                  </span>
                   Eliminar
                 </button>
               </td>
@@ -60,11 +86,15 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="4" class="border p-2 font-bold">Área total:</td>
+              <td colspan="4" class="border p-2 font-bold">
+                Área total ({{ selectedUnit }}²):
+              </td>
               <td class="border p-2">{{ totalArea.toFixed(2) }}</td>
             </tr>
             <tr>
-              <td colspan="4" class="border p-2 font-bold">Distancia total:</td>
+              <td colspan="4" class="border p-2 font-bold">
+                Distancia total ({{ selectedUnit }}):
+              </td>
               <td class="border p-2">{{ totalDistance.toFixed(2) }}</td>
             </tr>
           </tfoot>
@@ -74,6 +104,36 @@
       <!-- Columna derecha: Gráfico -->
       <div class="p-4">
         <canvas ref="polygonChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Modal para agregar unidad -->
+    <div
+      v-if="showAddUnitModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded-lg w-96">
+        <h3 class="text-lg font-bold mb-4">Agregar Nueva Unidad</h3>
+        <input
+          v-model="newUnit"
+          type="text"
+          placeholder="Nueva unidad de medida"
+          class="w-full border p-2 rounded mb-4"
+        />
+        <div class="flex justify-end gap-2">
+          <button
+            @click="addUnit"
+            class="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Guardar
+          </button>
+          <button
+            @click="showAddUnitModal = false"
+            class="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -92,6 +152,12 @@ export default {
         y: null,
       },
       chart: null,
+      units: ["UNIDAD", "M2", "HECT2", "PULG2", "FT2"],
+      selectedUnit: "UNIDAD",
+      showAddUnitModal: false,
+      newUnit: "",
+      isDeleting: false,
+      deletingIndex: null,
     };
   },
   computed: {
@@ -121,6 +187,26 @@ export default {
     },
   },
   methods: {
+    async confirmDelete(index) {
+      if (confirm("¿Está seguro de eliminar esta coordenada?")) {
+        this.isDeleting = true;
+        this.deletingIndex = index;
+
+        // Simulamos una operación asíncrona
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        this.removeCoordinate(index);
+        this.isDeleting = false;
+        this.deletingIndex = null;
+      }
+    },
+    addUnit() {
+      if (this.newUnit.trim()) {
+        this.units.push(this.newUnit.trim().toUpperCase());
+        this.newUnit = "";
+        this.showAddUnitModal = false;
+      }
+    },
     getLetter(index) {
       return String.fromCharCode(65 + index);
     },
@@ -250,5 +336,16 @@ export default {
 
 canvas {
   min-height: 400px;
+}
+
+/* Animación del spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 </style>
