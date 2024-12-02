@@ -146,16 +146,28 @@ export default {
           title: "Tabulador CIPU",
           path: "/cipu",
           icon: FileSearch,
-        },{
-          title:"Costos de calentamiento",
-          path:"/heating-cost",
-          icon:HandCoins,
+        },
+        {
+          title: "Costos de calentamiento",
+          path: "/heating-cost",
+          icon: HandCoins,
+        },
+
+        {
+          title: "Costos de inovación",
+          path: "/innovation-cost",
+          icon: HandCoins,
+        },
+        {
+          title: "Costos indirectos",
+          path: "/indirect-cost",
+          icon: HandCoins,
         },
         {
           title: "Salir del programa",
           path: "/exit",
           icon: LogOut,
-        }
+        },
       ],
     };
   },

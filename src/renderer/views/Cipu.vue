@@ -118,13 +118,13 @@
                   <template v-else>
                     <button
                       @click="startEdit(item)"
-                      class="bg-blue-500 text-white px-3 py-1 rounded"
+                      class="bg-blue-500 text-white px-3 py-1 rounded mb-2 w-full"
                     >
                       Editar
                     </button>
                     <button
                       @click="deleteRow(item)"
-                      class="bg-red-500 text-white px-3 py-1 rounded"
+                      class="bg-red-500 text-white px-3 py-1 rounded w-full mb-2"
                     >
                       Eliminar
                     </button>
