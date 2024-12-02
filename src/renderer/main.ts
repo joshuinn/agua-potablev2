@@ -44,7 +44,15 @@ const routes = [
       },{
         path:"/heating-cost",
         component:()=>import("./views/HeatingCost.vue")
+      },{
+        path:"/innovation-cost",
+        component:()=>import("./views/InnovationCost.vue")
+      },
+      {
+        path:"/indirect-cost",
+        component: () => import("./views/IndirectCost.vue"),
       }
+      
     ],
   },
 ];
